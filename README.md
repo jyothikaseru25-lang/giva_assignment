@@ -88,7 +88,7 @@ All APIs are implemented in `routes.js`.
 
 ### Prerequisites
 - Node.js (LTS) installed
-- Visual Studio Code installed
+- Git installed
 
 ---
 ### Step 1: Clone the Repository
