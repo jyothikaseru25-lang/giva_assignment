@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Chat App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Simple Chat</h2>
+
+<!-- User Selection -->
+<label>User:</label>
+<select id="userSelect" onchange="switchUser()">
+  <option value="1">User A</option>
+  <option value="2">User B</option>
+</select>
+
+<p id="currentUser"></p>
+
+<hr>
+
+<!-- Conversation List -->
+<button onclick="openConversation()">Open Conversation</button>
+<p id="unread"></p>
+
+<hr>
+
+<!-- Conversation Box (Hidden Initially) -->
+<div id="conversationBox" style="display:none;">
+  <h3>Conversation</h3>
+
+  <div id="messages"></div>
+
+  <input id="msg" placeholder="Type message" />
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+let currentUser = 1;
+let conversationOpen = false;
+
+// Switch user
+function switchUser() {
+  currentUser = document.getElementById("userSelect").value;
+
+  document.getElementById("currentUser").innerText =
+    "Logged in as User " + currentUser;
+
+  // Close conversation on user change
+  conversationOpen = false;
+  document.getElementById("conversationBox").style.display = "none";
+  document.getElementById("messages").innerHTML = "";
+
+  loadUnread();
+}
+
+// Load unread count
+function loadUnread() {
+  fetch(`/conversations?user_id=${currentUser}`)
+    .then(res => res.json())
+    .then(data => {
+     document.getElementById("unread").innerHTML =
+     `<span class="unread">Unread messages: ${data[0].unread_count}</span>`;
+    });
+}
+
+// Open conversation
+function openConversation() {
+  conversationOpen = true;
+  document.getElementById("conversationBox").style.display = "block";
+
+  fetch(`/conversations/1/messages`)
+    .then(res => res.json())
+    .then(data => {
+      const div = document.getElementById("messages");
+      div.innerHTML = "";
+      data.forEach(m => {
+       const isMe = m.sender_id == currentUser;
+      const className = isMe ? "message-me" : "message-other";
+
+      div.innerHTML += `
+      <p class="${className}">
+      <b>${isMe ? "Me" : "Other"}:</b> ${m.content}
+      </p>
+      `;
+      });
+    });
+
+  // Mark as read
+  fetch(`/conversations/1/read`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: currentUser })
+  }).then(loadUnread);
+}
+
+// Send message
+function sendMessage() {
+  if (!conversationOpen) return;
+
+  const content = document.getElementById("msg").value;
+
+  fetch("/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      conversation_id: 1,
+      sender_id: currentUser,
+      content
+    })
+  }).then(() => {
+    document.getElementById("msg").value = "";
+    openConversation();
+  });
+}
+
+// Initial load
+switchUser();
+</script>
+
+</body>
+</html>
