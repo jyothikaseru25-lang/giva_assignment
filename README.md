@@ -94,15 +94,15 @@ All APIs are implemented in `routes.js`.
 ### Step 1: Clone the Repository
 
 -in bash
-  git clone <https://github.com/jyothikaseru25-lang/giva_assignment.git>
-  cd giva_assignment
+  `git clone <https://github.com/jyothikaseru25-lang/giva_assignment.git>`
+  `cd giva_assignment`
 
 ---
 ### Step 2: Install Dependencies
 
 -in bash
-  npm install express sqlite3
-  npm install --save-dev nodemon
+  `npm install express sqlite3`
+  `npm install --save-dev nodemon`
 
 This installs all required packages and creates the node_modules folder.
 
@@ -110,7 +110,7 @@ This installs all required packages and creates the node_modules folder.
 ### Step 3: Start the Server
 
 -in bash
-  npx nodemon server.js
+  `npx nodemon server.js`
 
 The server will start at:
 http://localhost:3000
