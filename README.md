@@ -94,8 +94,8 @@ All APIs are implemented in `routes.js`.
 ### Step 1: Clone the Repository
 
 -in bash
-  git clone <your-github-repo-url>
-  cd simple-chat-app
+  git clone <https://github.com/jyothikaseru25-lang/giva_assignment.git>
+  cd giva_assignment
 
 ---
 ### Step 2: Install Dependencies
